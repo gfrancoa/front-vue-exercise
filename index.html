@@ -4,21 +4,32 @@
     <meta charset="UTF-8">
     <title>Vue Dev Exercise</title>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/aec41715d9.js"></script>
 </head>
 <body>
 <div id="app">
-    <div class="w-full h-screen flex items-center justify-center">
-        <div class="grid gap-4 grid-cols-3">
+    <div class="grid grid-flow-col grid-rows-2 w-full absolute flex items-center justify-center">
+        
+        <div >
+            <button class="min-width 3row-start-1 col-start-1 px-8 py-3 flex justify-center text-4xl bg-red-600 text-gray-100 rounded shadow" v-on:click="restart">Restart</button>
+        </div>
+
+        <div class="row-start-2 col-start-1 grid gap-4 grid-cols-3">
             <div v-for="(value,key) in values" 
                  @click="play(key)"
-                 class="border w-48 h-48 flex items-center justify-center text-4xl hover:bg-gray-100 cursor-pointer">
+                 class="border w-48 h-48 my-5 flex items-center justify-center text-4xl hover:bg-gray-100 cursor-pointer">
                 {{ value }}
             </div>
         </div>
+
+        <div class="row-start-3 col-start-1" v-if="winner">Game Finished! {{next}} wins!</div>
+        <div class="row-start-3 col-start-1" v-if="finished">Game over. It's a tie!</div>
+
     </div>
 </div>
 <script>
+
     var app = new Vue({
         el: '#app',
         data: () => ({
@@ -33,16 +44,56 @@
                 8: '',
                 9: '',
             },
-            current: 'X'
+            current: '<i class="fab fa-xbox">'+'</i>',
+            next: '<i class="fab fa-opera">'+'</i>',
+            winner: false,
+            finished: false
         }),
+
         methods:{
             play(key){
                 if(! this.values[key]) {
                     this.values[key] = this.current
-                    this.current  = (this.current === 'X' ? 'O' : 'X')
+                    this.current  = (this.current === '<i class="fab fa-xbox">'+'</i>' ? '<i class="fab fa-opera">'+'</i>' : '<i class="fab fa-xbox">'+'</i>')
+                    this.next = (this.current === '<i class="fab fa-opera">'+'</i>' ? '<i class="fab fa-xbox">'+'</i>' : 'O')
                 }
+
+                wins = ((this.values[1]==this.values[2] && this.values[2] == this.values[3] && this.values[1] != '' && this.values[2] != '' && this.values[3] != '')|| 
+                    (this.values[4]==this.values[5] && this.values[5] == this.values[6] && this.values[4] != '' && this.values[5] != '' && this.values[6] != '')||
+                    (this.values[7]==this.values[8] && this.values[8] == this.values[9] && this.values[7] != '' && this.values[8] != '' && this.values[9] != '') ||
+                    (this.values[1]==this.values[4] && this.values[4] == this.values[7] && this.values[1] != '' && this.values[4] != '' && this.values[7] != '') ||
+                    (this.values[2]==this.values[5] && this.values[5] == this.values[8] && this.values[2] != '' && this.values[5] != '' && this.values[8] != '') ||
+                    (this.values[3]==this.values[6] && this.values[6] == this.values[9] && this.values[3] != '' && this.values[6] != '' && this.values[9] != '') ||
+                    (this.values[1]==this.values[5] && this.values[5] == this.values[9] && this.values[1] != '' && this.values[5] != '' && this.values[9] != '') ||
+                    (this.values[3]==this.values[5] && this.values[5] == this.values[7] && this.values[3] != '' && this.values[5] != '' && this.values[7] != ''))
+
+                if(wins){
+                    this.winner = true
+                }
+
+            },
+
+            restart: function(){
+                this.values = {
+                1: '',
+                2: '',
+                3: '',
+                4: '',
+                5: '',
+                6: '',
+                7: '',
+                8: '',
+                9: '',
+                },
+
+                this.current = 'X',
+                this.winner = false,
+                this.finished = false
             }
+
         }
+
+
     })
 </script>
 </body>
