@@ -28,6 +28,7 @@
         
         </div>
 
+        <!--Tablero de Juego-->
         <div class="row d-flex justify-content-center">
             <button type="button" id="b1" onclick="colocar(this,this.id)"></button>
             <div class="col-0 bg-warning width-col"></div>                  
@@ -62,7 +63,7 @@
 
     </section>
 
-    <section>
+    <section> <!--botones-->
         <br>
         <div class="text-center">
             <button class="btn btn-danger btn-lg" id="recargar">Restart</button>
@@ -90,7 +91,7 @@
     </div>
 
    
-
+    <!--Inserción de audios-->
     <audio id="audio1" src="https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg"></audio>
     <audio id="audio2" src="https://actions.google.com/sounds/v1/cartoon/cartoon_cowbell.ogg"></audio>
 
@@ -99,6 +100,9 @@
 <script src="js/jquery.js"></script>
 <script src="js/popper.js"></script>
 <script src="js/bootstrap.min.js"></script>
+
+
+<!--Código JS para la lógica del juego-->
 
 <script type="text/javascript">
     var bandera = true; //indica si el juego inicio o terminó
@@ -128,16 +132,17 @@
     }
 
     function colocar(boton,clicked_id){
-        if (bandera==true && jugarComputadora == false){
-            idArray.push(clicked_id); //variable que almacena los ids de los elementos seleccionados en orden
-
-            if (tab){
+        if (tab){
+            alert("Entro a tab");
                 cont = cont + 1;
                 if (cont == 9){
                 document.getElementById("mensajeGanador").innerHTML = "It's a tie!";
                 document.getElementById("ganador").className = "alert alert-primary alert-dismissible fade show";
                 }
             }
+
+        if (bandera==true && jugarComputadora == false){
+            idArray.push(clicked_id); //variable que almacena los ids de los elementos seleccionados en orden
 
             if (turno==1 && boton.value=="."){
                 turno=2;
@@ -156,19 +161,12 @@
                 var audio2 = document.getElementById("audio2");
                 audio2.play();
                 }
+                revisar();
             }
             
         else if (bandera == true && jugarComputadora == true){
    
             idArray.push(clicked_id); //variable que almacena los ids de los elementos seleccionados en orden
-
-            if (tab){
-                cont = cont + 1;
-                if (cont == 9){
-                document.getElementById("mensajeGanador").innerHTML = "It's a tie!";
-                document.getElementById("ganador").className = "alert alert-primary alert-dismissible fade show";
-                }
-            }
 
             if (turno==1 && boton.value=="."){
                 boton.value="X";
@@ -176,20 +174,26 @@
                 var audio1 = document.getElementById("audio1");
                 audio1.play();
 
+                revisar();
+
+                if(bandera == true){
                 var movimientoPc = tab[numRan].value;
                 while (!(movimientoPc == ".")){
                     numRan = Math.floor(Math.random()*(9));
                     movimientoPc = tab[numRan].value;
-                }
+                    }
                     tab[numRan].value = "O";
                     tab[numRan].className = "col btn bg-danger height-col text-light fas fa-heart rounded"
                     var audio2 = document.getElementById("audio2");
                     audio2.play();
+                    revisar();
                 }
+
+            }
             
             
                     }
-        revisar();
+        
         }
 
     function revisar(){
@@ -250,7 +254,8 @@
 
     // boton Jugar con computadora
     function playPc(boton){
-        document.getElementById("juego").className = "alert alert-primary alert-dismissible fade show";
+
+        document.getElementById("ganador").className = "alert alert-primary alert-dismissible fade";
         for (var i=0; i<9; i++){
             tab[i].value = ".";
             tab[i].className = "col btn bg-light height-col text-light rounded";
@@ -259,7 +264,7 @@
         bandera = true; //indica si el juego inicio o terminó
         turno = 1; //determina el turno. 
         turnoAnterior = 2;
-
+        document.getElementById("juego").className = "alert alert-primary alert-dismissible fade show";
 
 
     }
