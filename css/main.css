@@ -1,0 +1,20 @@
+/* section#principal{
+
+} */
+
+.height-col{
+    width: 3px;
+    height: 160px;
+    font-size: 3em;
+}
+
+.website-title{
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.width-col{
+    width: 3px;
+    display: flex;
+    flex-direction: row;
+}
+

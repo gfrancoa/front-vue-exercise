@@ -2,99 +2,272 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Vue Dev Exercise</title>
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
-    <script src="https://use.fontawesome.com/aec41715d9.js"></script>
+    <title>Tic-Tac-Toe</title>
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/main.css">
+    <script src="https://kit.fontawesome.com/bffc640c6c.js" crossorigin="anonymous"></script>
+
 </head>
-<body>
-<div id="app">
-    <div class="grid grid-flow-col grid-rows-2 w-full absolute flex items-center justify-center">
+<body class="container py-1 align-items-center">
+
+    <h1 class="website-title text-center">
+        <span class="text-primary">Tic</span>
+        <span class="text-danger">Tac</span>
+        <span class="text-warning">Toe</span>
+    </h1>
+    <section>
+
+         <!--Alerta para juego con computadora-->
+        <div class="row alert alert-primary alert-dismissible fade" role="alert" id="juego">
+            <h4 class="alert-heading ">Rise and shine!</h4>
+        <label>It's your turn 😀. Good luck.</label>
+
+        <button type="button" class="close" data-dismiss="alert" aria-label="Cerrar">
+            <span aria-hidden="true">&times;</span>
+        </button>
         
-        <div >
-            <button class="min-width 3row-start-1 col-start-1 px-8 py-3 flex justify-center text-4xl bg-red-600 text-gray-100 rounded shadow" v-on:click="restart">Restart</button>
         </div>
 
-        <div class="row-start-2 col-start-1 grid gap-4 grid-cols-3">
-            <div v-for="(value,key) in values" 
-                 @click="play(key)"
-                 class="border w-48 h-48 my-5 flex items-center justify-center text-4xl hover:bg-gray-100 cursor-pointer">
-                {{ value }}
-            </div>
+        <div class="row d-flex justify-content-center">
+            <button type="button" id="b1" onclick="colocar(this,this.id)"></button>
+            <div class="col-0 bg-warning width-col"></div>                  
+            <button type="button" id="b2" onclick="colocar(this,this.id)"></button>
+            <div class="col-0 bg-success width-col"></div>  
+            <button type="button" id="b3" onclick="colocar(this,this.id)"></button>
+        </div> 
+
+        <div class="row">
+            <div class="col bg-danger"></div>
+        </div>
+        
+        <div class="row d-flex align-items-center">
+            <button type="button" id="b4" onclick="colocar(this,this.id)"></button>
+            <div class="col-0 bg-primary height-col"></div> 
+            <button type="button" id="b5" onclick="colocar(this,this.id)"></button>
+            <div class="col-0 bg-info height-col"></div>  
+            <button type="button" id="b6" onclick="colocar(this,this.id)"></button>
         </div>
 
-        <div class="row-start-3 col-start-1" v-if="winner">Game Finished! {{next}} wins!</div>
-        <div class="row-start-3 col-start-1" v-if="finished">Game over. It's a tie!</div>
+        <div class="row">
+            <div class="col bg-info"></div>
+        </div>
+        
+        <div class="row d-flex align-items-center">
+            <button type="button" id="b7" onclick="colocar(this,this.id)"></button>
+            <div class="col-0 bg-success height-col"></div> 
+            <button type="button" id="b8" onclick="colocar(this,this.id)"></button>
+            <div class="col-0 bg-warning height-col"></div> 
+            <button type="button" id="b9" onclick="colocar(this,this.id)"></button>
+        </div>
 
+    </section>
+
+    <section>
+        <br>
+        <div class="text-center">
+            <button class="btn btn-danger btn-lg" id="recargar">Restart</button>
+            <button type="button" class="btn btn-danger btn-lg" id="jugarPc" onclick="playPc(this)">Play with computer</button>
+            <button class="btn btn-danger btn-lg" id="deshacer">Undo</button>
+
+        </div>
+        <br><br>
+        <div class="row justify-content-between">
+            <span class="h3"><i class="fas fa-lg fa-smile"></i>: Player 1</span>
+            <span class="h3"><i class="fas fa-lg fa-heart"></i>: Player 2</span>
+        </div>
+    </section>
+
+    <br>
+    <!--Alerta para ganador/gameOver-->
+    <div class="alert alert-primary alert-dismissible fade" role="alert" id="ganador">
+        <h4 class="alert-heading ">Game is over!</h4>
+      <label id="mensajeGanador"></label>
+
+      <button type="button" class="close" data-dismiss="alert" aria-label="Cerrar">
+          <span aria-hidden="true">&times;</span>
+      </button>
+      
     </div>
-</div>
-<script>
 
-    var app = new Vue({
-        el: '#app',
-        data: () => ({
-            values: {
-                1: '',
-                2: '',
-                3: '',
-                4: '',
-                5: '',
-                6: '',
-                7: '',
-                8: '',
-                9: '',
-            },
-            current: '<i class="fab fa-xbox">'+'</i>',
-            next: '<i class="fab fa-opera">'+'</i>',
-            winner: false,
-            finished: false
-        }),
+   
 
-        methods:{
-            play(key){
-                if(! this.values[key]) {
-                    this.values[key] = this.current
-                    this.current  = (this.current === '<i class="fab fa-xbox">'+'</i>' ? '<i class="fab fa-opera">'+'</i>' : '<i class="fab fa-xbox">'+'</i>')
-                    this.next = (this.current === '<i class="fab fa-opera">'+'</i>' ? '<i class="fab fa-xbox">'+'</i>' : 'O')
+    <audio id="audio1" src="https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg"></audio>
+    <audio id="audio2" src="https://actions.google.com/sounds/v1/cartoon/cartoon_cowbell.ogg"></audio>
+
+
+
+<script src="js/jquery.js"></script>
+<script src="js/popper.js"></script>
+<script src="js/bootstrap.min.js"></script>
+
+<script type="text/javascript">
+    var bandera = true; //indica si el juego inicio o terminó
+    var turno = 1; //determina el turno. Si el turno es cero es jugador 1
+    var turnoAnterior = 2;
+    var tab = new Array(); //arreglo de botones
+    var idArray = new Array(); //arreglo de ids en orden
+    var cont = 0;
+    var jugarComputadora = false;
+    var numRan=Math.floor(Math.random()*(9));
+
+    window.onload = function(){
+        tab[0] = document.getElementById("b1");
+        tab[1] = document.getElementById("b2");
+        tab[2] = document.getElementById("b3");
+        tab[3] = document.getElementById("b4");
+        tab[4] = document.getElementById("b5");
+        tab[5] = document.getElementById("b6");
+        tab[6] = document.getElementById("b7");
+        tab[7] = document.getElementById("b8");
+        tab[8] = document.getElementById("b9");
+
+        for (var i=0; i<9; i++){
+            tab[i].value = ".";
+            tab[i].className = "col btn bg-light height-col text-light rounded";
+        }
+    }
+
+    function colocar(boton,clicked_id){
+        if (bandera==true && jugarComputadora == false){
+            idArray.push(clicked_id); //variable que almacena los ids de los elementos seleccionados en orden
+
+            if (tab){
+                cont = cont + 1;
+                if (cont == 9){
+                document.getElementById("mensajeGanador").innerHTML = "It's a tie!";
+                document.getElementById("ganador").className = "alert alert-primary alert-dismissible fade show";
                 }
-
-                wins = ((this.values[1]==this.values[2] && this.values[2] == this.values[3] && this.values[1] != '' && this.values[2] != '' && this.values[3] != '')|| 
-                    (this.values[4]==this.values[5] && this.values[5] == this.values[6] && this.values[4] != '' && this.values[5] != '' && this.values[6] != '')||
-                    (this.values[7]==this.values[8] && this.values[8] == this.values[9] && this.values[7] != '' && this.values[8] != '' && this.values[9] != '') ||
-                    (this.values[1]==this.values[4] && this.values[4] == this.values[7] && this.values[1] != '' && this.values[4] != '' && this.values[7] != '') ||
-                    (this.values[2]==this.values[5] && this.values[5] == this.values[8] && this.values[2] != '' && this.values[5] != '' && this.values[8] != '') ||
-                    (this.values[3]==this.values[6] && this.values[6] == this.values[9] && this.values[3] != '' && this.values[6] != '' && this.values[9] != '') ||
-                    (this.values[1]==this.values[5] && this.values[5] == this.values[9] && this.values[1] != '' && this.values[5] != '' && this.values[9] != '') ||
-                    (this.values[3]==this.values[5] && this.values[5] == this.values[7] && this.values[3] != '' && this.values[5] != '' && this.values[7] != ''))
-
-                if(wins){
-                    this.winner = true
-                }
-
-            },
-
-            restart: function(){
-                this.values = {
-                1: '',
-                2: '',
-                3: '',
-                4: '',
-                5: '',
-                6: '',
-                7: '',
-                8: '',
-                9: '',
-                },
-
-                this.current = 'X',
-                this.winner = false,
-                this.finished = false
             }
 
+            if (turno==1 && boton.value=="."){
+                turno=2;
+                turnoAnterior = 1;
+                boton.value="X";
+                boton.className = "col btn bg-secondary height-col text-light fas fa-smile rounded"
+                var audio1 = document.getElementById("audio1");
+                audio1.play();
+            }
+
+            else if (turno==2 && boton.value=="."){
+                turno=1;
+                turnoAnterior = 2;
+                boton.value = "O";
+                boton.className = "col btn bg-danger height-col text-light fas fa-heart rounded"
+                var audio2 = document.getElementById("audio2");
+                audio2.play();
+                }
+            }
+            
+        else if (bandera == true && jugarComputadora == true){
+   
+            idArray.push(clicked_id); //variable que almacena los ids de los elementos seleccionados en orden
+
+            if (tab){
+                cont = cont + 1;
+                if (cont == 9){
+                document.getElementById("mensajeGanador").innerHTML = "It's a tie!";
+                document.getElementById("ganador").className = "alert alert-primary alert-dismissible fade show";
+                }
+            }
+
+            if (turno==1 && boton.value=="."){
+                boton.value="X";
+                boton.className = "col btn bg-secondary height-col text-light fas fa-smile rounded";
+                var audio1 = document.getElementById("audio1");
+                audio1.play();
+
+                var movimientoPc = tab[numRan].value;
+                while (!(movimientoPc == ".")){
+                    numRan = Math.floor(Math.random()*(9));
+                    movimientoPc = tab[numRan].value;
+                }
+                    tab[numRan].value = "O";
+                    tab[numRan].className = "col btn bg-danger height-col text-light fas fa-heart rounded"
+                    var audio2 = document.getElementById("audio2");
+                    audio2.play();
+                }
+            
+            
+                    }
+        revisar();
         }
 
+    function revisar(){
+        
+        if ((tab[0].value =="X" && tab[1].value=="X" && tab[2].value=="X") ||
+        (tab[3].value =="X" && tab[4].value=="X" && tab[5].value=="X") ||
+        (tab[6].value =="X" && tab[7].value=="X" && tab[8].value=="X") ||
+        (tab[0].value =="X" && tab[3].value=="X" && tab[6].value=="X") ||
+        (tab[1].value =="X" && tab[4].value=="X" && tab[7].value=="X") ||
+        (tab[2].value =="X" && tab[5].value=="X" && tab[8].value=="X") ||
+        (tab[2].value =="X" && tab[4].value=="X" && tab[6].value=="X") ||
+        (tab[0].value =="X" && tab[4].value=="X" && tab[8].value=="X") ){
 
-    })
+        document.getElementById("ganador").className = "alert alert-primary alert-dismissible fade show";
+        if (jugarComputadora){
+            document.getElementById("mensajeGanador").innerHTML = "Congratulations! You beat the computer";
+        }else{
+            document.getElementById("mensajeGanador").innerHTML = "The winner is player " + turnoAnterior + "!";
+        }
+        bandera = false;
+    }
+
+        if ((tab[0].value =="O" && tab[1].value=="O" && tab[2].value=="O") ||
+        (tab[3].value =="O" && tab[4].value=="O" && tab[5].value=="O") ||
+        (tab[6].value =="O" && tab[7].value=="O" && tab[8].value=="O") ||
+        (tab[0].value =="O" && tab[3].value=="O" && tab[6].value=="O") ||
+        (tab[1].value =="O" && tab[4].value=="O" && tab[7].value=="O") ||
+        (tab[2].value =="O" && tab[5].value=="O" && tab[8].value=="O") ||
+        (tab[2].value =="O" && tab[4].value=="O" && tab[6].value=="O") ||
+        (tab[0].value =="O" && tab[4].value=="O" && tab[8].value=="O") ){
+
+        document.getElementById("ganador").className = "alert alert-primary alert-dismissible fade show";
+        if (jugarComputadora){
+            document.getElementById("mensajeGanador").innerHTML = "Oh! You lost to the computer";
+        }else{
+            document.getElementById("mensajeGanador").innerHTML = "The winner is player " + turnoAnterior + "!";
+        }
+        bandera = false;
+    }
+}
+
+    //EventListener para los botones
+
+    //botón Recargar
+    const reload = document.getElementById('recargar');
+    reload.addEventListener('click', _ => { // el _ es para indicar la ausencia de parametros
+        location.reload();
+    });
+
+    //boton deshacer    
+    const undo = document.getElementById('deshacer');
+    undo.addEventListener('click', _ => { 
+
+        document.getElementById(idArray[idArray.length-1]).className = "col btn bg-light height-col text-light rounded";
+        document.getElementById(idArray[idArray.length-1]).value = ".";
+        idArray.pop();        
+    });
+
+    // boton Jugar con computadora
+    function playPc(boton){
+        document.getElementById("juego").className = "alert alert-primary alert-dismissible fade show";
+        for (var i=0; i<9; i++){
+            tab[i].value = ".";
+            tab[i].className = "col btn bg-light height-col text-light rounded";
+        }
+        jugarComputadora = true;
+        bandera = true; //indica si el juego inicio o terminó
+        turno = 1; //determina el turno. 
+        turnoAnterior = 2;
+
+
+
+    }
+
+    
+
+
+    
 </script>
 </body>
 </html>
